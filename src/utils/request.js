@@ -55,4 +55,23 @@ axios.interceptors.response.use(response => {
   }
 })
 
-export default axios
+// 对restful 请求封装
+export default function request (method, url, data) {
+  // 处理请求的url和数据
+  data = method === 'get' ? { params: data } : data
+  // 发送请求
+  return new Promise((resolve, reject) => {
+    axios[method](url, data)
+      .then(response => {
+        resolve(response.data)
+      }, error => {
+        reject(error)
+      })
+      .catch(error => {
+        reject(error)
+      })
+  })
+    .catch(error => {
+      console.log(error)
+    })
+}

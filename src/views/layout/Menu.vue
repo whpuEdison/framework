@@ -14,28 +14,8 @@ export default {
     return {
       menu: [
         {
-          name: '用户信息列表',
-          pathName: 'userList'
-        },
-        {
-          name: '公告发送管理',
-          pathName: 'bulletinSendManage'
-        },
-        {
-          name: '问卷调查配置',
-          pathName: 'questionnaireConfig'
-        },
-        {
-          name: '广告维护',
-          pathName: 'advertisementDefend'
-        },
-        {
-          name: '便捷服务维护',
-          pathName: 'convenientServiceDefend'
-        },
-        {
-          name: '热点问题维护',
-          pathName: 'hotspotIssuesDefend'
+          name: '基本信息',
+          pathName: 'basicInfo'
         }
       ]
     }

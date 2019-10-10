@@ -13,17 +13,32 @@ const router = new Router({
 
 // 全局路由配置，控制用户访问权限
 router.beforeEach((to, from, next) => {
-  ajaxAbort()
-  next()
+  if (to.name === 'login') {
+    next()
+  } else if (store.state.loginState || from.name === 'login') {
+    if (to.name) {
+      next()
+    } else {
+      next({name: 'notFound'})
+    }
+  } else {
+    next({name: 'login'})
+  }
 })
 
-// 路由切换时，中止上一个页面的ajax请求
-function ajaxAbort () {
-  let ajaxSource = store.state.ajaxSource
-  ajaxSource.forEach(source => {
-    source.cancel('ajax cancel')
-  })
-  store.commit('resetAjaxSource')
-}
+/**
+ * 判断是否拥有权限
+ * @param permission
+ * @returns {boolean}
+//  */
+// function menuList (name) {
+//   let menuData = store.state.menuData
+//   for (let i = 0; i <= menuData.length; i++) {
+//     if (menuData[i] && name === menuData[i].pathName) {
+//       return true
+//     }
+//   }
+//   return false
+// }
 
 export default router

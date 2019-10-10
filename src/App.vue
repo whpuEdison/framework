@@ -1,19 +1,12 @@
 <template>
   <div id="app">
-    <EgMenu/>
-    <div class="workspace">
-      <router-view/>
-    </div>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import EgMenu from '@/views/layout/Menu'
 export default {
-  name: 'App',
-  components: {
-    EgMenu
-  }
+  name: 'App'
 }
 </script>
 

@@ -4,17 +4,25 @@ Vue.use(Vuex)
 // store全局引入 ajax
 export default new Vuex.Store({
   state: {
-    // ajax请求资源
-    ajaxSource: []
+    // 菜单
+    menuData: sessionStorage.getItem('menuData') ? JSON.parse(sessionStorage.getItem('menuData')) : [],
+    // 用户名
+    userName: sessionStorage.getItem('userName') || '',
+    // 登录状态
+    loginState: sessionStorage.getItem('loginState') || false
   },
   mutations: {
-    // 添加ajax请求资源
-    addAjaxSource (state, source) {
-      state.ajaxSource.push(source)
+    // 获取菜单
+    setMenuData (state, source) {
+      state.menuData = source
+      sessionStorage.setItem('menuData', JSON.stringify(source))
     },
-    // 重置ajaxSource对象
-    resetAjaxSource (state) {
-      state.ajaxSource.length = 0
+    // 登录
+    login (state, {loginState, userName}) {
+      sessionStorage.setItem('loginState', loginState)
+      sessionStorage.setItem('userName', userName)
+      state.loginState = loginState
+      state.userName = userName
     }
   },
   actions: {

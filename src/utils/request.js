@@ -1,16 +1,10 @@
 import axios from 'axios'
-import store from '@/store'
 
 axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
 // 定义超时时间为30秒
 axios.defaults.timeout = 60000
 // 全局配置axios ，注冊token、
-let CancelToken = axios.CancelToken
 axios.interceptors.request.use(config => {
-  // 每一个ajax请求添加cancelToken
-  let source = CancelToken.source()
-  config.cancelToken = source.token
-  store.commit('addAjaxSource', source)
   return config
 }, err => {
   return Promise.reject(err)

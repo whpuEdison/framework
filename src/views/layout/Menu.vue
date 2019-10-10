@@ -10,14 +10,9 @@
 <script>
 export default {
   name: 'Menu',
-  data () {
-    return {
-      menu: [
-        {
-          name: '基本信息',
-          pathName: 'basicInfo'
-        }
-      ]
+  computed: {
+    menu () {
+      return this.$store.state.menuData
     }
   }
 }

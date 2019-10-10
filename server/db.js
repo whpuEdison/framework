@@ -24,9 +24,15 @@ db.on('disconnected', function () {
  * Model的每一个实例（instance）就是一个document，
  * document可以保存到数据库和对数据库进行操作。
  */
-const basicInfo = require('./model/basicInfo')
+// const basicInfo = require('./model/basicInfo')
+const schema = mongoose.Schema()
 const model = {
-  basicInfo: mongoose.model('basic_infos', basicInfo)
+  basicInfo: mongoose.model('basic_infos', schema),
+  user: mongoose.model('users', schema),
+  role: mongoose.model('roles', schema),
+  menu: mongoose.model('menus', schema),
+  user_role: mongoose.model('user_roles', schema),
+  role_menu: mongoose.model('role_menus', schema)
 }
 
 module.exports = model

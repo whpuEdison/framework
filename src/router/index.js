@@ -15,9 +15,11 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.name === 'login') {
     next()
+  } else if (to.name === 'notFound') {
+    next()
   } else if (store.state.loginState || from.name === 'login') {
     if (to.name) {
-      next()
+      menuList(to.name) ? next() : next({name: 'notFound'})
     } else {
       next({name: 'notFound'})
     }
@@ -31,14 +33,14 @@ router.beforeEach((to, from, next) => {
  * @param permission
  * @returns {boolean}
 //  */
-// function menuList (name) {
-//   let menuData = store.state.menuData
-//   for (let i = 0; i <= menuData.length; i++) {
-//     if (menuData[i] && name === menuData[i].pathName) {
-//       return true
-//     }
-//   }
-//   return false
-// }
+function menuList (name) {
+  let menuData = store.state.menuData
+  for (let i = 0; i <= menuData.length; i++) {
+    if (menuData[i] && name === menuData[i].pathName) {
+      return true
+    }
+  }
+  return false
+}
 
 export default router

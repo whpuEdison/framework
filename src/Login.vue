@@ -41,7 +41,7 @@ export default {
           loginApi.getUsers(this.ruleForm).then(res => {
             if (res.errorCode === 0) {
               this.$router.push({name: 'root'})
-              this.$store.commit('login', {loginState: true, userName: this.ruleForm.account})
+              this.$store.commit('login', {loginState: true, userName: this.ruleForm.account, token: res.token})
               loginApi.getMenus(this.ruleForm).then(data => {
                 if (data.errorCode === 0) {
                   this.$store.commit('setMenuData', data.data)
@@ -56,11 +56,7 @@ export default {
           return false
         }
       })
-    },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
     }
-
   }
 }
 </script>

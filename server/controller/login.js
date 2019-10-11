@@ -1,11 +1,19 @@
 const db = require('../db')
 const util = require('../util')
+const createToken = require('../token/createToken')
 
 const getUsers = async (ctx) => {
-  let doc = await db.user.find(ctx.request.body)
-  let res = util.packResponse(doc)
-  ctx.response.body = {
-    errorCode: res.errorCode
+  try {
+    let doc = await db.user.find(ctx.request.body)
+    let res = util.packResponse(doc)
+    // 生成token
+    let token = createToken(ctx.request.body)
+    ctx.response.body = {
+      token: token,
+      errorCode: res.errorCode
+    }
+  } catch (e) {
+    ctx.response.body = util.packResponse([])
   }
 }
 

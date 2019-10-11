@@ -1,6 +1,8 @@
 import axios from 'axios'
 
 axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
+axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
+
 // 定义超时时间为30秒
 axios.defaults.timeout = 60000
 // 全局配置axios ，注冊token、
@@ -16,25 +18,27 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(response => {
   try {
     // 响应头信息
-    let headInfo = response.data.head
+    let headInfo = response.data
     if (headInfo) {
       if (response.status === 200 || response.status === 304) {
         if (headInfo.errorCode === 0) {
           return response
         } else {
+          localStorage.removeItem('token')
           return Promise.reject(response)
         }
         // 请求没找到，有两种可能，一种是请求的地址错误，一种是服务器挂掉，找不到请求地址
       } else if (response.status === 404) {
+        return Promise.reject(response)
         // router.replace({name: 'notFound', query: {status: response.status}})
         // 服务器内部错误
       } else if (response.status === 500 || response.status === 504) {
+        return Promise.reject(response)
         // router.replace({name: 'notFound', query: {status: response.status}})
       } else {
         return Promise.reject(response)
       }
     }
-    return response
   } catch (e) {
     return Promise.reject(response)
   }

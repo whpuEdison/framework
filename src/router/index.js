@@ -16,11 +16,11 @@ const router = new Router({
 
 // 全局路由配置，控制用户访问权限
 router.beforeEach((to, from, next) => {
-  if (to.name === 'login') {
+  if (to.name === 'login' || from.name === 'login') {
     next()
   } else if (to.name === 'notFound') {
     next()
-  } else if (store.state.loginState || from.name === 'login') {
+  } else if (store.state.token) {
     NProgress.start()
     if (to.name) {
       menuList(to.name) ? next() : next({name: 'notFound'})

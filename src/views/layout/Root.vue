@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <EgMenu/>
+  <div class="fullSize">
+    <Header/>
+    <Menu/>
     <div class="workspace">
       <router-view/>
     </div>
@@ -8,15 +9,25 @@
 </template>
 
 <script>
-import EgMenu from '@/views/layout/Menu'
+import Header from '@/views/layout/Header'
+import Menu from '@/views/layout/Menu'
 export default {
   name: 'Root',
   components: {
-    EgMenu
+    Menu,
+    Header
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+  @import "../../assets/less/index.less";
+  .workspace{
+    width: calc(100% - @menu-width - 2px);
+    height: calc(100% - @header-height);
+    display: inline-block;
+    float: right;
+    padding: 10px;
+    box-sizing: border-box;
+  }
 </style>

@@ -23,6 +23,12 @@ export default new Vuex.Store({
       sessionStorage.setItem('userName', userName)
       state.loginState = loginState
       state.userName = userName
+    },
+    // 登出
+    logOut (state) {
+      sessionStorage.removeItem('loginState')
+      sessionStorage.removeItem('userName')
+      sessionStorage.removeItem('menuData')
     }
   },
   actions: {

@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import routes from './routers'
 import store from '@/store'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+NProgress.configure({ showSpinner: false })
 
 Vue.use(Router)
 
@@ -18,11 +21,13 @@ router.beforeEach((to, from, next) => {
   } else if (to.name === 'notFound') {
     next()
   } else if (store.state.loginState || from.name === 'login') {
+    NProgress.start()
     if (to.name) {
       menuList(to.name) ? next() : next({name: 'notFound'})
     } else {
       next({name: 'notFound'})
     }
+    NProgress.done()
   } else {
     next({name: 'login'})
   }

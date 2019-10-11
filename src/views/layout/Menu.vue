@@ -18,10 +18,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+  @import "../../assets/less/index.less";
   .menu{
-    width: 180px;
-    height: 100%;
+    width: @menu-width;
+    height: calc(100% - @header-height);
     display: inline-block;
     float: left;
   }

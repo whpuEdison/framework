@@ -8,8 +8,9 @@ axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencod
 axios.defaults.timeout = 60000
 // 全局配置axios ，注冊token、
 axios.interceptors.request.use(config => {
-  if (localStorage.getItem('token')) {
-    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
+  let token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = token
   }
   return config
 }, err => {

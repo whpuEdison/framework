@@ -38,10 +38,10 @@ router.beforeEach((to, from, next) => {
  * @param permission
  * @returns {boolean}
 //  */
-function menuList (name) {
-  let menuData = store.state.menuData
-  for (let i = 0; i <= menuData.length; i++) {
-    if (menuData[i] && name === menuData[i].pathName) {
+function menuList (permission) {
+  let permissions = store.state.permissions
+  for (let i = 0, len = permissions.length; i < len; i++) {
+    if (permission === permissions[i]) {
       return true
     }
   }

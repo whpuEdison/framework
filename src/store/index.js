@@ -6,6 +6,8 @@ export default new Vuex.Store({
   state: {
     // 菜单
     menuData: localStorage.getItem('menuData') ? JSON.parse(localStorage.getItem('menuData')) : [],
+    // 权限
+    permissions: localStorage.getItem('permissions') ? JSON.parse(localStorage.getItem('permissions')) : [],
     // 用户名
     userName: sessionStorage.getItem('userName') || '',
     // 登录状态
@@ -17,7 +19,10 @@ export default new Vuex.Store({
     // 获取菜单
     setMenuData (state, source) {
       state.menuData = source
+      // 设置权限
+      state.permissions = getPermission(source)
       localStorage.setItem('menuData', JSON.stringify(source))
+      localStorage.setItem('permissions', JSON.stringify(state.permissions))
     },
     // 登录
     login (state, {loginState, userName, token}) {
@@ -34,6 +39,7 @@ export default new Vuex.Store({
       sessionStorage.removeItem('userName')
       localStorage.removeItem('menuData')
       localStorage.removeItem('token')
+      localStorage.removeItem('permissions')
     }
   },
   actions: {
@@ -41,3 +47,18 @@ export default new Vuex.Store({
   getters: {
   }
 })
+
+/**
+ * 获取权限
+ */
+function getPermission (menuData) {
+  let permissions = []
+  menuData.forEach(menu => {
+    menu.menuPath && permissions.push(menu.menuPath)
+    if (menu.children && menu.children.length) {
+      permissions = permissions.concat(getPermission(menu.children))
+    }
+  })
+  // 数组去重
+  return [...new Set(permissions)]
+}

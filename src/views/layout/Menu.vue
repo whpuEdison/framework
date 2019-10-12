@@ -1,8 +1,13 @@
 <template>
-  <el-menu
-    class="el-menu-vertical-demo menu">
+  <el-menu class="el-menu-vertical-demo menu" :collapse="true">
     <el-menu-item v-for="(item, index) in menu" :key="index" :index="index + ''">
-      <router-link :to="{name: item.pathName}" tag="div">{{item.name}}</router-link>
+      <router-link v-if="!item.children" :to="{name: item.menuPath}" tag="div">{{item.menuName}}</router-link>
+      <el-submenu v-else :index="index + ''">
+        <template slot="title">{{item.menuName}}</template>
+        <el-menu-item v-for="(childItem, childIndex) in item.children" :key="childIndex" :index="index + '-' + childIndex">
+          <router-link :to="{name: childItem.menuPath}" tag="div">{{childItem.menuName}}</router-link>
+        </el-menu-item>
+      </el-submenu>
     </el-menu-item>
   </el-menu>
 </template>
@@ -12,6 +17,7 @@ export default {
   name: 'Menu',
   computed: {
     menu () {
+      console.log(this.$store.state.menuData)
       return this.$store.state.menuData
     }
   }

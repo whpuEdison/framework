@@ -35,13 +35,7 @@ const getMenus = async (ctx) => {
             menuId: item
           })
         })
-        let menuList = await db.menu.find({$or: params})
-        menuList.forEach(item => {
-          menuPath.push({
-            name: item.toJSON().menuName,
-            pathName: item.toJSON().menuPath
-          })
-        })
+        menuPath = await db.menu.find({$or: params})
       }
     }
   }

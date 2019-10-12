@@ -17,7 +17,7 @@ module.exports = (token) => {
     } else {
       res = {
         errorMsg: '解析成功',
-        errorCode: 1
+        errorCode: 0
       }
     }
   } else {

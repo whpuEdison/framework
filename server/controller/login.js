@@ -6,6 +6,7 @@ const getUsers = async (ctx) => {
   try {
     let doc = await db.user.find(ctx.request.body)
     let res = util.packResponse(doc)
+    global.tokenParam = ctx.request.body
     // 生成token
     let token = createToken(ctx.request.body)
     ctx.response.body = {

@@ -1,7 +1,7 @@
 /**
  * 封装response数据
  */
-function packResponse (doc) {
+function packResponse (doc, token) {
   let errorCode = 0 // 状态码
   let data = '' // 返回内容
   try {
@@ -19,6 +19,7 @@ function packResponse (doc) {
     errorCode: errorCode,
     data: data
   }
+  token && (res.token = token)
   return res
 }
 

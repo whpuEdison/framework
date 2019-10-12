@@ -9,6 +9,6 @@ module.exports = (userInfo) => {
   const token = jwt.sign({
     account: userInfo.account,
     password: userInfo.password
-  }, serect, {expiresIn: '1800s'})
+  }, serect, {expiresIn: '30s'})
   return token
 }

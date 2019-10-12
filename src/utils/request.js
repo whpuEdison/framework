@@ -1,12 +1,16 @@
 import axios from 'axios'
+import router from '@/router'
+import store from '@/store'
 
 axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'
-axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
 
 // 定义超时时间为30秒
 axios.defaults.timeout = 60000
 // 全局配置axios ，注冊token、
 axios.interceptors.request.use(config => {
+  if (localStorage.getItem('token')) {
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
+  }
   return config
 }, err => {
   return Promise.reject(err)
@@ -22,14 +26,18 @@ axios.interceptors.response.use(response => {
     if (headInfo) {
       if (response.status === 200 || response.status === 304) {
         if (headInfo.errorCode === 0) {
-          return response
+          if (headInfo.token) {
+            localStorage.setItem('token', headInfo.token)
+          }
         } else {
-          localStorage.removeItem('token')
-          return Promise.reject(response)
+          store.commit('logOut')
+          axios.defaults.headers.common['Authorization'] = null
+          router.replace({name: 'login'})
         }
+        return response
         // 请求没找到，有两种可能，一种是请求的地址错误，一种是服务器挂掉，找不到请求地址
       } else if (response.status === 404) {
-        return Promise.reject(response)
+        return Promise.reject(headInfo)
         // router.replace({name: 'notFound', query: {status: response.status}})
         // 服务器内部错误
       } else if (response.status === 500 || response.status === 504) {

@@ -1,6 +1,7 @@
 // import store from '@/store'
 import information from './information'
 import eCharts from './eCharts'
+import zRender from './zRender'
 
 export default [
   {
@@ -21,7 +22,8 @@ export default [
     },
     children: [
       ...information,
-      ...eCharts
+      ...eCharts,
+      ...zRender
     ]
   },
   {

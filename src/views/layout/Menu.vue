@@ -17,7 +17,6 @@ export default {
   name: 'Menu',
   computed: {
     menu () {
-      console.log(this.$store.state.menuData)
       return this.$store.state.menuData
     }
   }

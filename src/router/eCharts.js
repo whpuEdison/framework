@@ -1,7 +1,7 @@
 export default [
   {
-    path: '/eCharts',
-    name: 'eCharts',
+    path: '/ECharts',
+    name: 'ECharts',
     meta: {
       title: 'ECharts图表'
     },

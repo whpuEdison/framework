@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"framework.role_menus"}],"uuid":"79afe06563f44c30a15e44d2885bc6cc"}

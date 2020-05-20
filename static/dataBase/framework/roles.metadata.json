@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"framework.roles"}],"uuid":"74d333a43b65491b8903c8ed3f676297"}

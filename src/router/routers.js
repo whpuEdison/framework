@@ -2,6 +2,7 @@
 import information from './information'
 import eCharts from './eCharts'
 import zRender from './zRender'
+import model from './model'
 
 export default [
   {
@@ -18,12 +19,12 @@ export default [
     component: resolve => require(['@/views/layout/Root'], resolve),
     redirect: () => {
       return '/basicInfo'
-      // return store.state.menuData.length > 0 ? store.state.menuData[0].pathName : 'login'
     },
     children: [
       ...information,
       ...eCharts,
-      ...zRender
+      ...zRender,
+      ...model
     ]
   },
   {

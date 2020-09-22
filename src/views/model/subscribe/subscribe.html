@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发布订阅模式</title>
+</head>
+<body>
+<script>
+  // 定义消息中心类
+  class EventEmitter {
+    constructor () {
+      this.events = {}
+    }
+    /**
+     * 注册事件订阅行为
+     * type: 类型
+     * fn: 回调函数
+     */
+    subscribe (type, fn) {
+      (this.events[type] || (this.events[type] = [])).push(fn)
+    }
+    /**
+     * 注销事件订阅行为
+     * type: 类型
+     * fn: 回调函数
+     */
+    unSubscribe (type, fn) {
+      this.events[type] && (this.events[type].splice(this.events[type].indexOf(fn), 1))
+    }
+    /**
+     * 发布事件
+     * type: 类型
+     * args: 参数列表
+     */
+    publish (type, ...args) {
+      this.events[type] && this.events[type].forEach(fn => fn(...args))
+    }
+  }
+
+  // 创建一个事件总线
+  let eventBus = new EventEmitter()
+
+  /**
+   * 媒体
+   */
+  class Media {
+    constructor (name) {
+      this.name = name
+    }
+    /**
+     * 精华版
+     */
+    essence () {
+      eventBus.publish('essence', `${this.name}精华版`)
+    }
+    /**
+     * 海外版
+     */
+    overseas () {
+      eventBus.publish('overseas', `${this.name}海外版`)
+    }
+  }
+
+  function showEssence(msg) {
+    console.log(`${this.name}在看${msg}`)
+  }
+
+  /**
+   * 读者
+   */
+  class Subscriber {
+    constructor (name) {
+      this.name = name
+      // 在构造方法中绑定this
+      this.subEssence = this.subEssence.bind(this)
+      this.subOverseas = this.subOverseas.bind(this)
+    }
+    subEssence () {
+      // 往事件总线注册订阅事件
+      eventBus.subscribe('essence', (msg) => console.log(`${this.name}在看${msg}`))
+    }
+    subOverseas () {
+      // 往事件总线注册订阅事件
+      eventBus.subscribe('overseas', (msg) => console.log(`${this.name}在看${msg}`))
+    }
+  }
+
+  // 创建一个发布者: 央视新闻
+  let CCTV = new Media('央视新闻')
+  // 创建一个读者对象： 小马
+  let xiaoMa = new Subscriber('小马')
+  // 创建一个读者对象： 小代
+  let xiaoDai = new Subscriber('小代')
+
+  // 小马订阅央视新闻的精华版
+  xiaoMa.subEssence()
+  // 小马、小代订阅央视新闻的海外版
+  xiaoMa.subOverseas()
+  xiaoDai.subOverseas()
+
+  // 小马取消订阅央视新闻的海外版
+  // eventBus.unSubscribe('overseas', (msg) => console.log(`${this.name}在看${msg}`))
+
+  // 央视新闻发布精华版
+  CCTV.essence()
+  // 央视新闻发布海外版
+  CCTV.overseas()
+
+</script>
+</body>
+</html>

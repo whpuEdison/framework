@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+  /**
+   * 发布者
+   */
+  class Publisher {
+    constructor () {
+      this.subscriber = {}
+    }
+    /**
+     * 添加订阅者
+     * type: 类型
+     * fn: 回调函数, 用于发布者发布该类型事件时通知订阅者
+     */
+    subscribe (type, fn) {
+      (this.subscriber[type] || (this.subscriber[type] = [])).push(fn)
+    }
+    /**
+     * 删除订阅者
+     * type: 类型
+     * fn: 回调函数，用于发布者匹配该类型需删除的订阅者
+     */
+    unSubscribe (type, fn) {
+      // type类型的订阅者数组
+      let sub = this.subscriber[type] || []
+      sub && sub.splice(sub.indexOf(fn), 1)
+    }
+    /**
+     * 发布信息
+     * type: 类型
+     * msg: 信息内容
+     */
+    publish (type, msg) {
+      let sub = this.subscriber[type] || []
+      sub.length && sub.forEach(item => item(msg))
+    }
+  }
+
+  /**
+   * 媒体
+   */
+  class Media extends Publisher {
+    constructor (name) {
+      super()
+      this.name = name
+    }
+    /**
+     * 精华版
+     */
+    essence () {
+      this.publish('essence', `${this.name}精华版`)
+    }
+    /**
+     * 海外版
+     */
+    overseas () {
+      this.publish('overseas', `${this.name}海外版`)
+    }
+  }
+
+  /**
+   * 读者
+   */
+  class Subscriber {
+    constructor (name) {
+      this.name = name
+      // 在构造方法中绑定this
+      this.subEssence = this.subEssence.bind(this)
+      this.subOverseas = this.subOverseas.bind(this)
+    }
+    subEssence (msg) {
+      console.log(`${this.name}在看${msg}`)
+    }
+    subOverseas (msg) {
+      console.log(`${this.name}在看${msg}`)
+    }
+  }
+
+  // 创建一个媒体对象：读者杂志
+  let magazine = new Media('读者杂志')
+  // 创建一个读者对象： 小马
+  let xiaoMa = new Subscriber('小马')
+  // 创建一个读者对象： 小代
+  let xiaoDai = new Subscriber('小代')
+
+
+  // 小马订阅读者杂志的精华版
+  magazine.subscribe('essence', xiaoMa.subEssence)
+  // 小马、小代订阅读者杂志的海外版
+  magazine.subscribe('overseas', xiaoMa.subOverseas)
+  magazine.subscribe('overseas', xiaoDai.subOverseas)
+
+  // 小马取消订阅读者杂志的海外版
+  // magazine.unSubscribe('overseas', xiaoMa.subOverseas)
+
+  // 读者杂志发布精华版
+  magazine.essence()
+  // 读者杂志发布海外版
+  magazine.overseas()
+
+</script>
+</body>
+</html>

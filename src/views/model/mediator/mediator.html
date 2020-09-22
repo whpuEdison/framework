@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>中介者模式</title>
   <style>
     .box-card {
       width: 480px;
@@ -32,8 +32,6 @@
     }
   </style>
   <link href="../../../plugin/css/spop.css" rel="stylesheet">
-  <script src="../../../plugin/js/spop.js"></script>
-  <script src="../../../../node_modules/countup/countUp.js"></script>
 </head>
 <body>
 <div class="box-card">
@@ -46,6 +44,8 @@
     <span id="score2"></span>
   </div>
 </div>
+<script src="../../../plugin/js/spop.js"></script>
+<script src="../../../../node_modules/countup/countUp.js"></script>
 <script>
   // 获取指定id的Dom的方法
   let $ = id => {
@@ -59,7 +59,7 @@
       el.className = str
     }
   }
-  // 玩家类
+  // 玩家对象
   function Player (name, score) {
     this.name = name
     this.score = score || 0
@@ -68,25 +68,21 @@
     this.score++
     Mediator.played()
   }
-  // 定义两个滚动数字的容器
-  let count1,count2
-  // 中介者
+  // 中介者对象
   let Mediator = {
     players: {},
     init: function () {
       let players = this.players
       players.Tom = new Player('Tom', 95)
-      players.Jerry = new Player('Jerry', 110)
-      // 为记分板比分值加上样式
-      Scoreboard.addClass({
+      players.Jerry = new Player('Jerry', 100)
+      let initScore = {
         score1: players.Tom.score,
         score2: players.Jerry.score
-      })
+      }
+      // 为记分板比分值加上样式
+      Scoreboard.addClass(initScore)
       // 为滚动数字的容器赋值
-      count1 = new CountUp($('score1'), 0, players.Tom.score)
-      count2 = new CountUp($('score2'), 0, players.Jerry.score)
-      count1.start()
-      count2.start()
+      Scoreboard.init(initScore)
     },
     // 玩家分数变化时会触发中介者的这个方法
     played: function () {
@@ -106,25 +102,36 @@
       (event.keyCode === 112) && this.players.Jerry.addScore();
     }
   }
-  // 记分板
+  // 记分板对象
   let Scoreboard = {
-    // 先清空类样式，再根据值加上类样式
+    // 定义两个滚动数字的对象
+    count1: null,
+    count2: null,
+    // 初始化记分板数据
+    init: function (score) {
+      this.count1 = new CountUp($('score1'), 0, score.score1)
+      this.count2 = new CountUp($('score2'), 0, score.score2)
+      this.count1.start()
+      this.count2.start()
+    },
+    update: function (score) {
+      this.addClass(score)
+      // 更新记分板数据
+      this.count1.update(score.score1)
+      this.count2.update(score.score2)
+    },
+    // 给记分板上数据添加样式
     addClass: function (score) {
       $('score1').className = $('score2').className = ''
       score.score1 < score.score2 && addClass($('score1'), 'lost')
       score.score2 < score.score1 && addClass($('score2'), 'lost')
-    },
-    update: function (score) {
-      // 更新容器值
-      count1.update(score.score1)
-      count2.update(score.score2)
     }
   }
   // 监听键盘事件，并将这个事件托管到中介者
   window.onkeypress = e => Mediator.keyPress(e)
   // 开始提醒
   spop({
-    template: '游戏开始',
+    template: '召唤师们，你们好',
     position: 'top-center',
     autoclose: 2000,
     style: 'success'
@@ -136,7 +143,7 @@
     window.onkeypress = null
     // 结束提醒
     spop({
-      template: '游戏结束',
+      template: '召唤师们，下次再见',
       position: 'top-center',
       autoclose: 2000,
       style: 'success'

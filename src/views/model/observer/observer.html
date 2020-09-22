@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>观察者模式</title>
+</head>
+<body>
+<script>
+  // 发布者
+  let Publisher = {
+    // 所有的发布者信息，key为订阅类型，value用来存储调用通知信息的订阅者方法
+    subscribers: {
+      any: []
+    },
+    // 添加订阅者
+    subscribe: function (fn, type = 'any') {
+      if (this.subscribers[type]) {
+        this.subscribers[type].push(fn)
+      } else {
+        this.subscribers[type] = [fn]
+      }
+    },
+    // 删除订阅者
+    unSubscribe: function (fn, type) {
+      this.visitSubscribers('unSubscribe', fn, type)
+    },
+    // 发布信息
+    publish: function (content, type) {
+      this.visitSubscribers('publish', content, type)
+    },
+    // 访问订阅者，获取当前订阅类型数据
+    visitSubscribers (operation, fnOrContent, type = 'any') {
+      // 临时数组，存放当前类型的订阅者方法
+      let tempArr = this.subscribers[type] || []
+      if (operation === 'unSubscribe') {
+        if (tempArr.length) {
+          for (let i in tempArr) {
+            if (tempArr[i] === fnOrContent) {
+              // 删除订阅
+              tempArr.splice(i, 1)
+            }
+          }
+        }
+      } else if (operation === 'publish') {
+        tempArr.forEach(item => {
+          // 发布信息
+          item(fnOrContent)
+        })
+      }
+    }
+  }
+
+  // 将普通对象包装成发布者
+  function makePublisher (obj) {
+    for (let i in Publisher) {
+      if (Publisher[i] instanceof Function) {
+        obj[i] = Publisher[i]
+      }
+    }
+    obj.subscribers = {
+      any: []
+    }
+  }
+
+  // 报社对象
+  let paper = {
+    daily: function () {
+      this.publish('早上好')
+    },
+    monthly: function () {
+      this.publish('一个月过去了', 'monthly')
+    }
+  }
+
+  // 将报社包装成一个发布对象
+  makePublisher(paper)
+
+  // 读者类
+  function Reader(name) {
+    this.readDaily = function (data) {
+      console.log(name + '订阅的今天日报内容：' + data)
+    }
+    this.watchMonthly = function (data) {
+      console.log(name + '订阅的月报时间到：' + data)
+    }
+  }
+
+  // 创建读者对象
+  let xiaoMa = new Reader('xiaoMa')
+  let xiaoDai = new Reader('xiaoDai')
+
+  // 给读者xiaoMa订阅日报
+  paper.subscribe(xiaoMa.readDaily)
+  // 给读者xiaoDai订阅月报
+  paper.subscribe(xiaoDai.watchMonthly, 'monthly')
+
+  // 发布日报
+  paper.daily()
+  // 发布月报
+  paper.monthly()
+
+  // 把读者xiaoMa包装成发布对象
+  makePublisher(xiaoMa)
+  xiaoMa.vlog = function () {
+    this.publish('xiaoMa的vlog', 'vlog')
+  }
+  // 给paper添加一个订阅vlog事件
+  paper.vlog = function (data) {
+    console.log('杂志社订阅到的信息：' + data)
+  }
+  xiaoMa.subscribe(paper.vlog, 'vlog')
+  // xiaoMa发布vlog
+  xiaoMa.vlog()
+</script>
+</body>
+</html>
